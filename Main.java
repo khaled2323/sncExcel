@@ -161,8 +161,8 @@ public class Main {
 		System.out.println(totalPriceForAllItems);
 	
 	}
-
-	static void writeColumnAdditions() throws EncryptedDocumentException, IOException {
+	
+	static void writeColumnAdditions(Double cRate) throws EncryptedDocumentException, IOException {
 		File file = new File("./src/snc/com/sam.xlsx");
 		try {
 			FileInputStream fis = new FileInputStream(file);
@@ -171,8 +171,13 @@ public class Main {
 			Sheet sheet = workbook.getSheetAt(0);
 			
 			int rowCount = 2; // get last row num
+			int columnCount;
+			if(cRate == 0) {
+		     columnCount = sheet.getDefaultColumnWidth() ; // find current column width for Riyals
+			}else {
+				   columnCount = sheet.getDefaultColumnWidth() + 1 ;
+			}
 			
-			int columnCount = sheet.getDefaultColumnWidth() ; // find current column width 
 			Double inputTemp [] = new Double[TotalPriceEach.size()]; // get array size of this arrayList since this stupid library doesnt support arrayLists
 			inputTemp = TotalPriceEach.toArray(new Double[0]);
 			
@@ -194,10 +199,12 @@ public class Main {
 	           workbook.close();
 	          
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}   //obtaining bytes from the file  
 	}
+	
+	
 	public static void main(String[] args) throws EncryptedDocumentException, IOException {
 		
 			System.out.print("Program 1 started\n");
@@ -210,11 +217,13 @@ public class Main {
 		    if(cRate == 0) {
 		    	// means that its in saudi riyals
 		    	riyalsFunction();
-		    	writeColumnAdditions();
+		    	writeColumnAdditions(cRate);
 		    	
 		    } else {
 		    	// means it is not in Saudi riyals
 		    	nonRiyalsFunction(cRate);
-		    }		
+		    	writeColumnAdditions(cRate);
+		    }	
+		    myObj.close();
 	}
 }
